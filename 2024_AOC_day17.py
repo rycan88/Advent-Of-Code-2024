@@ -44,7 +44,7 @@ while currentIndex < len(Program) - 1:
         Registers[2] = int(Registers[0] / (2 ** comboOperand))
     currentIndex += 2
 '''
-import sys
+
 A, B = inp.split("\n\n")
 
 Registers = []
@@ -62,37 +62,16 @@ def getOctList(num):
         num = num // 8
     return Lst
 
-#Vals = [7,0,1, 0, 2,2,3, 5]
+def octToNum(Vals):
+    startValue = 0
+    for x in range(len(Vals)):
+        startValue += Vals[x] * (8 ** x)
+    return startValue
 
-# [6, 4, 4, 6, 5, 2, 3, 5]
-
-# [(4),6, 5, 2,3,5]
-# [(6),6, 5, 2,3,5]
-# [(6),6, 5, 2,3,5]
-Vals = [0,1,0,2,2,3,5]
-
-#2,4,1,2,7,5,0,3,1,7,4,1,5,5,3,0
-Vals = [7,6,6,5, 2, 3, 5]
-
-startValue = 0
-for x in range(len(Vals)):
-    startValue += Vals[x] * (8 ** x)
-print(startValue) #11361574
-print(getOctList(11361574))
-#startValue = 149754979999990 #203554107309583 
-aValue = startValue
-
-Thing = [1,7,4,1,5,5,3,0] 
-testing = False
-while True:
-    if aValue == startValue - 8:
-        break
-    Answer = []
+def getFirstNum(aValue):
     Registers = [aValue, 0, 0]
     currentIndex = 0
-    answerIndex = 0
-    if aValue % 1000000 == 0:
-        print(aValue)
+
     while currentIndex < len(Program) - 1:
         opcode = Program[currentIndex]
         literalOperand = Program[currentIndex + 1]
@@ -113,36 +92,28 @@ while True:
         elif opcode == 4:
             Registers[1] = Registers[1] ^ Registers[2]
         elif opcode == 5:
-            val = comboOperand % 8
-            
-            if testing:
-                if (answerIndex >= len(Thing) or Thing[answerIndex] != val):
-                    if answerIndex >= len(Thing):
-                        sys.quit()
-                    break
-             
-            
-            Answer.append(val)
-            answerIndex += 1
-            print(comboOperand % 8,end=",")
+            return comboOperand % 8
         elif opcode == 6:
             Registers[1] = int(Registers[0] / (2 ** comboOperand))
         elif opcode == 7:
             Registers[2] = int(Registers[0] / (2 ** comboOperand))
         currentIndex += 2
-    
-    '''
-    if (Answer == Thing): #Program):
-        print(aValue)
-        break
-    '''
-    print("   :", bin(aValue))
-    aValue -= 1
 
+def recursion(Vals, index, Answers):
+    if index < 0:
+        answer = octToNum(Vals)
+        Answers.append(answer)
+        return
+    goal = Program[index]
+    for x in range(8):
+        newVals = [x] + Vals
+        num = octToNum(newVals)
+        firstNum = getFirstNum(num)
+        if firstNum == goal:
+            recursion(newVals, index - 1, Answers)
 
-# 126000000,214000000, 308000000
-#2,4,1,2,7,5,0,3,1,7,4,1,5,5,3,0
-#7,1,4,7,3,2,5,6,4,3,1,4,2,2,6,5
+Vals = []
+Answers = []
+recursion(Vals, len(Program) - 1, Answers)
+print(min(Answers))
 
-#253397408990389
-#203583007309583 HIGH
