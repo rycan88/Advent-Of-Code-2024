@@ -3510,24 +3510,6 @@ Around = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 def addTups(t1, t2):
     return (t1[0] + t2[0], t1[1] + t2[1])
 
-'''
-def printBoard(Board, width, height):
-    for y in range(height):
-        for x in range(width):
-            print(Board[(x, y)], end="")
-        print("\n")
-
-Map = {}
-for y in range(0, 71):
-    for x in range(0, 71):
-        coord = (x, y)
-        if coord in S:
-            Map[coord] = "#"
-        else:
-            Map[coord] = "."
-printBoard(Map, 71, 71)
-'''
-
 start = (0, 0)
 end = (70, 70)
 win = False
